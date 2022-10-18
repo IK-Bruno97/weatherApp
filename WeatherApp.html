@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap");
+        * {
+            box-sizing: border-box;
+        }
+        html,body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            height: 100%;
+        }
+        input {
+            padding: 1rem;
+            border-radius: 25px;
+            border: none;
+            background-color: #fff;
+            font-family: inherit;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            min-width: 300px;
+            font-size: 1rem;
+            display: block;
+            left: 50%;
+            top: 40%;
+            height: 50px;
+            transform: translate(-50%, -50%);
+            position: absolute;
+        }
+        input:focus {
+            outline: none;
+        }
+        .div1{
+            height: 40%;
+            width: 100%;
+            float: left;
+
+        } 
+        .div2 {
+            width: 100%;
+            height: 60%;
+            float: left;
+
+        }
+        .div1 {
+            background-color: skyblue;
+            background-image: url("undraw_weather.svg");
+        }
+        .div2 {
+            background: linear-gradient(skyblue, rgb(255, 115, 0));
+        }
+        #main {
+            padding-top: 20px;
+            text-align: center;
+            font-size: 2rem;
+        }
+        #main h2 {
+            margin-bottom: 0;
+            text-align: center;
+            align-items: center;
+        } /* .weather img{ transform: scale(2); } */
+
+        .wrap {
+                height: 100%;
+            } 
+           
+    </style>
+</head>
+
+<body>
+    
+    <div class="wrap">
+        <form class="image" id="form">
+            <input type="text" id="search" placeholder="Search By Loaction" autocomplete="off">
+        </form>
+        <div class="div1"> </div>
+        <div class="div2" id="main"> </div>
+    </div>
+
+
+    <script>
+        const apiKey = "ENTER YOUR API KEY";
+
+        const main = document.getElementById('main');
+        const form = document.getElementById('form');
+        const search = document.getElementById('search');
+        
+        const url = (city)=> `http://api.weatherapi.com/v1/current.json?key=2215dd8a961d40979ff180517221810&q=${city}`;
+
+
+        async function getWeatherByLocation(city){
+            
+                const resp = await fetch(url(city), {
+                    origin: "cros" });
+                const respData = await resp.json();
+                console.log(respData)
+            
+                addWeatherToPage(respData);
+                
+        }
+
+        function addWeatherToPage(data){
+            const temp = Ktoc(data.current.temp_c);
+
+            
+            main.innerHTML = `
+            <small>weather condition: ${data.current.condition.text} </small> 
+            <h2> ${temp}°C </h2>
+            <small>current temperature: ${data.current.temp_c}</small>
+            `;
+
+           //   cleanup 
+         
+        };
+
+
+        function Ktoc(K){
+            return Math.floor(K - 273.15);
+        }
+
+
+       
+        form.addEventListener('submit',(e) =>{
+            e.preventDefault();
+
+            const city = search.value;
+
+            if(city){
+                getWeatherByLocation(city)
+            }
+
+        });
+
+    </script>
+</body>
+
+</html
